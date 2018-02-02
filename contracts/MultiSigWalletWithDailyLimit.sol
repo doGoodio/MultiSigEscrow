@@ -25,9 +25,9 @@ contract MultiSigWalletWithDailyLimit is MultiSigWallet {
     /// @param _owners List of initial owners.
     /// @param _required Number of required confirmations.
     /// @param _dailyLimit Amount in wei, which can be withdrawn without confirmations on a daily basis.
-    function MultiSigWalletWithDailyLimit(address[] _owners, uint _required, uint _dailyLimit)
+    function MultiSigWalletWithDailyLimit(address[] _owners, uint _required, bool _fixedOwners, uint _dailyLimit)
         public
-        MultiSigWallet(_owners, _required)
+        MultiSigWallet(_owners, _required, _fixedOwners)
     {
         dailyLimit = _dailyLimit;
     }

@@ -32,6 +32,7 @@ contract MultiSigWallet {
     address[] public owners;
     uint public required;
     uint public transactionCount;
+    bool public fixedOwners;
 
     struct Transaction {
         address destination;
@@ -91,6 +92,11 @@ contract MultiSigWallet {
         _;
     }
 
+    modifier isFlexOwners() {
+        require(!fixedOwners);
+        _;
+    }
+
     /// @dev Fallback function allows to deposit ether.
     function()
         payable
@@ -105,7 +111,7 @@ contract MultiSigWallet {
     /// @dev Contract constructor sets initial owners and required number of confirmations.
     /// @param _owners List of initial owners.
     /// @param _required Number of required confirmations.
-    function MultiSigWallet(address[] _owners, uint _required)
+    function MultiSigWallet(address[] _owners, uint _required, bool _fixedOwners)
         public
         validRequirement(_owners.length, _required)
     {
@@ -115,6 +121,7 @@ contract MultiSigWallet {
         }
         owners = _owners;
         required = _required;
+        fixedOwners = _fixedOwners;
     }
 
     /// @dev Allows to add a new owner. Transaction has to be sent by wallet.
@@ -125,6 +132,7 @@ contract MultiSigWallet {
         ownerDoesNotExist(owner)
         notNull(owner)
         validRequirement(owners.length + 1, required)
+        isFlexOwners()
     {
         isOwner[owner] = true;
         owners.push(owner);
@@ -137,6 +145,7 @@ contract MultiSigWallet {
         public
         onlyWallet
         ownerExists(owner)
+        isFlexOwners()
     {
         isOwner[owner] = false;
         for (uint i=0; i<owners.length - 1; i++)
@@ -158,6 +167,7 @@ contract MultiSigWallet {
         onlyWallet
         ownerExists(owner)
         ownerDoesNotExist(newOwner)
+        isFlexOwners()
     {
         for (uint i=0; i<owners.length; i++)
             if (owners[i] == owner) {
@@ -176,6 +186,7 @@ contract MultiSigWallet {
         public
         onlyWallet
         validRequirement(owners.length, _required)
+        isFlexOwners()
     {
         required = _required;
         RequirementChange(_required);
