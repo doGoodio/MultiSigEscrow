@@ -22,6 +22,10 @@ nosetests.xml
 # Vagrant
 .vagrant
 
+# Emacs
+*~
+*[#]*
+
 # Vim
 
 *~
