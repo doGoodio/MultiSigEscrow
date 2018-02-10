@@ -14,11 +14,11 @@ contract MultiSigWalletFactory is Factory {
     /// @param _owners List of initial owners.
     /// @param _required Number of required confirmations.
     /// @return Returns wallet address.
-    function create(address[] _owners, uint _required)
+  function create(address[] _owners, uint _required, bool _fixed_owners)
         public
         returns (address wallet)
     {
-        wallet = new MultiSigWallet(_owners, _required);
+      wallet = new MultiSigWallet(_owners, _required, _fixed_owners);
         register(wallet);
     }
 }
