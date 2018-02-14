@@ -35,7 +35,17 @@ var submitTransaction = async(destination, value, data, web3Params) => {
   if (simulated) return;
   if (escrow == undefined) throw('Escrow factory undefined');
   
-  const tx = await escrow.submitTransaction(destination, value, data, web3Parmas);
+  const result = await escrow.submitTransaction(destination, value, data, web3Parmas);
+
+  for (var i = 0; i < result.logs.length; i++) {
+      var log = result.logs[i];
+
+      if (log.event == "EscrowCreation") {
+        // We found the event!
+        console.log("Escrow created with id: " + log.args.id);
+        return log.args.id;
+      }
+    }
 
   return id;
 }
