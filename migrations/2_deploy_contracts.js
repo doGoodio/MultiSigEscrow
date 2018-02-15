@@ -1,5 +1,6 @@
 
 const MultisigWalletWithoutDailyLimit = artifacts.require('MultiSigWallet.sol')
+const MultisigWalletWithDailyLimit = artifacts.require('MultiSigWalletWithDailyLimit.sol')
 const MultisigWalletFactory = artifacts.require('MultiSigWalletWithDailyLimitFactory.sol')
 
 module.exports = deployer => {
@@ -12,13 +13,13 @@ module.exports = deployer => {
   for (iArg=0; iArg<args.length; iArg++) {
     if (args[iArg].startsWith("--dailylimit")) { dailylimit=args[iArg].substr(13) } // optional
     if (args[iArg].startsWith("--required")) { required=args[iArg].substr(11) } // optional
-    if (args[iArg].startsWith("--accounts")) { dailylimit=args[iArg].substr(11) }
+    if (args[iArg].startsWith("--accounts")) { accounts=args[iArg].substr(11) }
     if (args[iArg].startsWith("--fixed")) { fixed=true } // optional
   }
 
   //if (fixed == undefined) { fixed=false }
   //if (required == undefined) { required='0' }
-  
+
   if (process.env.DEPLOY_FACTORY){
     deployer.deploy(MultisigWalletFactory)
     console.log("Factory with Daily Limit deployed")
@@ -29,7 +30,7 @@ module.exports = deployer => {
     deployer.deploy(MultisigWalletWithoutDailyLimit, accounts.split(","), required, fixed)
     console.log("Wallet deployed")
   } else {
-    deployer.deploy(MultisigWalletWithDailyLimit, wallet.accounts.split(","), required, fixed, dailylimit)
+    deployer.deploy(MultisigWalletWithDailyLimit, accounts.split(","), required, fixed, dailylimit)
     console.log("Wallet with Daily Limit deployed")
   }
 }
