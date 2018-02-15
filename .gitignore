@@ -76,6 +76,7 @@ dapp/bower_components
 # Keys
 dapp/localhost.crt
 dapp/localhost.key
+keys.js
 
 # Travis
 .travis/deploy_key

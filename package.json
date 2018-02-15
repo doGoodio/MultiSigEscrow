@@ -28,10 +28,13 @@
     }
   },
   "dependencies": {
+    "babel-polyfill": "^6.26.0",
+    "babel-register": "^6.26.0",
     "child_process": "^1.0.2",
     "ethereumjs-testrpc": "^4.0.1",
     "run-with-testrpc": "^0.2.1",
-    "truffle": "^3.4.9"
+    "truffle": "^3.4.9",
+    "truffle-hdwallet-provider": "0.0.3"
   },
   "devDependencies": {
     "babel-eslint": "^7.2.3",
