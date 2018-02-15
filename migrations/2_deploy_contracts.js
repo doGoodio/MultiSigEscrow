@@ -1,7 +1,7 @@
 
 const MultisigWalletWithoutDailyLimit = artifacts.require('MultiSigWallet.sol')
 const MultisigWalletWithDailyLimit = artifacts.require('MultiSigWalletWithDailyLimit.sol')
-const MultisigWalletFactory = artifacts.require('MultiSigWalletWithDailyLimitFactory.sol')
+const MultiSigWalletWithDailyLimitFactory = artifacts.require('MultiSigWalletWithDailyLimitFactory.sol')
 
 module.exports = deployer => {
   const args = process.argv.slice()
@@ -9,6 +9,9 @@ module.exports = deployer => {
   required='0'
   accounts=''
   dailylimit='none'
+
+  deployer.deploy(MultiSigWalletWithDailyLimitFactory);
+  return;
   
   for (iArg=0; iArg<args.length; iArg++) {
     if (args[iArg].startsWith("--dailylimit")) { dailylimit=args[iArg].substr(13) } // optional
@@ -20,8 +23,8 @@ module.exports = deployer => {
   //if (fixed == undefined) { fixed=false }
   //if (required == undefined) { required='0' }
 
-  if (process.env.DEPLOY_FACTORY){
-    deployer.deploy(MultisigWalletFactory)
+  if (factoryWithLimit){
+    deployer.deploy(MultiSigWalletWithDailyLimitFactory)
     console.log("Factory with Daily Limit deployed")
   } else if (!accounts) {
     console.error("Multisig with daily limit requires to pass owner " +

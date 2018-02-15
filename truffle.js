@@ -14,7 +14,7 @@ var kovanProvider   = new HDWalletProvider(mnemonic, "https://kovan.infura.io/" 
 var liveProvider    = new HDWalletProvider(mnemonic, "https://mainnet.infura.io/" + infura_apikey);
 
 const gasPrice = 40 * 1000000000; // gigawei
-const gas = 1000000;
+const gas = 6000000;
 
 module.exports = {
   networks: {
