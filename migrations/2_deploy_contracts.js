@@ -1,8 +1,9 @@
 
 const MultisigWalletWithoutDailyLimit = artifacts.require('MultiSigWallet.sol')
-const MultisigWalletFactory = artifacts.require('MultiSigWalletWithDailyLimitFactory.sol')
+const MultisigWalletWithDailyLimitFactory = artifacts.require('MultiSigWalletWithDailyLimitFactory.sol')
 
 module.exports = deployer => {
+  deployer.deploy(MultisigWalletWithDailyLimitFactory)
   const args = process.argv.slice()
   fixed=false
   required='0'
