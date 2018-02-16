@@ -1,77 +1,5 @@
 //var MockMultiSigWalletWithDailyLimitFactory = artifacts.require('../../../test/mocks/MultiSigWalletWithDailyLimitFactory.sol');
-var MultiSigWalletWithDailyLimitFactory = artifacts.require('../../../build/contracts/MultiSigWalletWithDailyLimitFactory.sol');
-var escrowFact = undefined;
-
-//var simulated = false;
-//var testrpc = true;
-//var failPercentage = 0.01;
-
-// ==============
-// Test functions
-// ==============
-
-/*var setBlockTime = async(t, web3Params) => {
-  // begin timestamp
-  const tx = await escrow.setBlockTime(t, web3Params);
-}*/
-
-// =============
-// Init function
-// =============
-
-var init = async (web3Params) => {
-//  if (testrpc)
-//    escrowFact = await MockMultiSigWalletWithDailyLimitFactory.new(web3Params);
-//  else
-    escrowFact = await MultiSigWalletWithDailyLimitFactory.deployed();
-}
-
-// =================
-//  User functions
-// =================
-
-var pullEvent = (result, eventType) => {
- for (var i = 0; i < result.logs.length; i++) {
-      var log = result.logs[i];
-
-      if (log.event == eventType) {
-        return log.args;
-      }
-    }
-}
-
-var createNewEscrow = async(owners, confirmations, dailyLimit, web3Parmas) => {
-  // If simulated allocate fake votes
-  //if (simulated) return;
-  
-  // For all other cases, testrpc, testnet, mainnet
-  if (escrowFact == undefined) throw('Escrow factory undefined');
-  
-  const tx = escrowFact.create(owners, confirmations, dailyLimit, web2Parmas);
-  //escrowFact.ContractInstantiation(address sender, instantiation)
-  return pullEvent(tx, 'ContractInstantiation');
-}
-
-
-// =================
-//       API
-// =================
-
-exports.setBlockTime = setBlockTime;
-
-// init
-exports.init = init;
-
-// User
-exports.createNewEscrow = createNewEscrow;
-
-var MockMultiSigWalletWithDailyLimit = artifacts.require('../../../test/mocks/MultiSigWalletWithDailyLimit.sol');
-var MultiSigWalletWithDailyLimit = artifacts.require('../../../build/contracts/MultiSigWalletWithDailyLimit.sol');
-var escrow = undefined;
-
-var simulated = false;
-var testrpc = true;
-var failPercentage = 0.01;
+var MultiSigWalletWithDailyLimitFactory;
 
 // ==============
 // Test functions
@@ -80,6 +8,39 @@ var failPercentage = 0.01;
 var setBlockTime = async(t, web3Params) => {
   // begin timestamp
   const tx = await escrow.setBlockTime(t, web3Params);
+}
+
+// =============
+// Init function
+// =============
+
+var getEscrowFact = async() => {
+  MultiSigWalletWithDailyLimitFactory  = artifacts.require('../../../build/contracts/MultiSigWalletWithDailyLimitFactory.sol');
+  return await MultiSigWalletWithDailyLimitFactory.deployed();
+}
+
+var getEscrowFactGanache = async() => {
+  return await MultiSigWalletWithDailyLimitFactory.deployed();
+}
+
+
+// =================
+//  User functions
+// =================
+
+var pullEvent = (result, eventType) => {
+ for (var i = 0; i < result.logs.length; i++) {
+      var log = result.logs[i];
+      if (log.event == eventType) return log.args;
+    }
+}
+
+var createEscrow = async(escrowFact, owners, confirmations, dailyLimit, args) => {
+  // For all other cases, testrpc, testnet, mainnet
+  if (escrowFact == undefined) throw('Escrow factory undefined');
+
+  const tx = await escrowFact.create(owners, confirmations, dailyLimit, args); //owners, confirmations, dailyLimit
+  return await pullEvent(tx, 'ContractInstantiation');
 }
 
 // =============
@@ -270,3 +231,8 @@ exports.getTransactionCount = getTransactionCount;
 exports.getOwners = getOwners;
 exports.getConfirmations = getConfirmations;
 exports.getTransactionIds = getTransactionIds;
+
+module.exports = {
+    getEscrowFact,
+    createEscrow
+};
