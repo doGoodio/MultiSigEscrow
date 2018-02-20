@@ -1,11 +1,21 @@
-//var MockMultiSigWalletWithDailyLimitFactory = artifacts.require('../../../test/mocks/MultiSigWalletWithDailyLimitFactory.sol');
-var MultiSigWalletWithDailyLimitFactory;
+const Web3 = require('web3');
+const config = require('./config.js');
+const mswf_json = require('./contracts/MultiSigWalletWithDailyLimitFactory.json');
+const msw_json = require('./contracts/MultiSigWalletWithDailyLimit.json');
+
+if (typeof web3 !== 'undefined') {
+  web3 = new Web3(web3.currentProvider);
+} else {
+  // set the provider you want from Web3.providers
+  web3 = new Web3(new Web3.providers.HttpProvider(config.provider));
+}
+
 
 // ==============
 // Test functions
 // ==============
 
-var setBlockTime = async(t, web3Params) => {
+var setBlockTime = async (t, web3Params) => {
   // begin timestamp
   const tx = await escrow.setBlockTime(t, web3Params);
 }
@@ -14,34 +24,27 @@ var setBlockTime = async(t, web3Params) => {
 // Init function
 // =============
 
-var getEscrowFact = async() => {
-  MultiSigWalletWithDailyLimitFactory  = artifacts.require('../../../build/contracts/MultiSigWalletWithDailyLimitFactory.sol');
-  return await MultiSigWalletWithDailyLimitFactory.deployed();
+var getEscrowFact = (network_id) => {
+  network_id = network_id || config.network_id;
+  const contract_address = mswf_json.networks[network_id].address;
+  return web3.eth.contract(mswf_json.abi).at(contract_address);
 }
 
-var getEscrowFactGanache = async() => {
-  return await MultiSigWalletWithDailyLimitFactory.deployed();
-}
-
+var getWallet = wallet_address => web3.eth.contract(msw_json.abi).at(wallet_address);
 
 // =================
 //  User functions
 // =================
 
-var pullEvent = (result, eventType) => {
+const pullEvent = (result, eventType) => {
  for (var i = 0; i < result.logs.length; i++) {
       var log = result.logs[i];
       if (log.event == eventType) return log.args;
     }
 }
 
-var createEscrow = async(escrowFact, owners, confirmations, dailyLimit, args) => {
-  // For all other cases, testrpc, testnet, mainnet
-  if (escrowFact == undefined) throw('Escrow factory undefined');
-
-  const tx = await escrowFact.create(owners, confirmations, dailyLimit, args); //owners, confirmations, dailyLimit
-  return await pullEvent(tx, 'ContractInstantiation');
-}
+const createEscrow = (WalletFactory, owners, confirmations, dailyLimit, args) =>
+  getWallet(WalletFactory.create(owners, confirmations, true, dailyLimit, args));
 
 // =============
 // Init function
@@ -212,7 +215,7 @@ var getTransactionIds = async (from, to, pending, exeucted) => {
 // =================
 
 // testing
-exports.setBlockTime = setBlockTime;
+/*exports.setBlockTime = setBlockTime;
 
 // init
 exports.init = init;
@@ -231,8 +234,10 @@ exports.getTransactionCount = getTransactionCount;
 exports.getOwners = getOwners;
 exports.getConfirmations = getConfirmations;
 exports.getTransactionIds = getTransactionIds;
-
+*/
 module.exports = {
     getEscrowFact,
-    createEscrow
+    createEscrow,
+    web3,
+    mswf_json
 };
