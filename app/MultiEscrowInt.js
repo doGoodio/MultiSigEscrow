@@ -32,6 +32,8 @@ var getEscrowFact = (network_id) => {
 
 var getWallet = wallet_address => web3.eth.contract(msw_json.abi).at(wallet_address);
 
+var getEscrowWithAddress = async (address) => {return await web3.eth.contract(msw_json.abi).at(address);};
+
 // =================
 //  User functions
 // =================
@@ -236,8 +238,9 @@ exports.getConfirmations = getConfirmations;
 exports.getTransactionIds = getTransactionIds;
 */
 module.exports = {
-    getEscrowFact,
-    createEscrow,
-    web3,
-    mswf_json
-};
+  , getEscrowFact
+  , getEscrowWithAddress
+  , createEscrow
+  , web3
+  , mswf_json
+  };
