@@ -13,7 +13,7 @@ var rinkebyProvider = new HDWalletProvider(mnemonic, "https://rinkeby.infura.io/
 var kovanProvider   = new HDWalletProvider(mnemonic, "https://kovan.infura.io/" + infura_apikey);
 var liveProvider    = new HDWalletProvider(mnemonic, "https://mainnet.infura.io/" + infura_apikey);
 
-const gasPrice = 40 * 1000000000; // gigawei
+const gasPrice = 2 * 1000000000; // gigawei
 const gas = 6000000;
 
 module.exports = {

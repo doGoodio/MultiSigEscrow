@@ -237,6 +237,7 @@ exports.getOwners = getOwners;
 exports.getConfirmations = getConfirmations;
 exports.getTransactionIds = getTransactionIds;
 */
+
 module.exports = {
   , getEscrowFact
   , getEscrowWithAddress
@@ -244,3 +245,4 @@ module.exports = {
   , web3
   , mswf_json
   };
+

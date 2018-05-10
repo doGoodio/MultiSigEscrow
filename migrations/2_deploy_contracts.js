@@ -22,7 +22,7 @@ module.exports = deployer => {
 
   //if (fixed == undefined) { fixed=false }
   //if (required == undefined) { required='0' }
-
+  factoryWithLimit = true;
   if (factoryWithLimit){
     deployer.deploy(MultiSigWalletWithDailyLimitFactory)
     console.log("Factory with Daily Limit deployed")
