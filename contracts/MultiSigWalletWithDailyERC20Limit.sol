@@ -53,10 +53,10 @@ contract MultiSigWalletWithDailyLimit is MultiSigWallet, ERC20WithdrawDailyLimit
       // this.withdrawTokens(to, value);
       bool _withdrawTokens =            
            txn.destination == address(this)
-        && txn.data[0] == 0xce
-        && txn.data[1] == 0xa0
-        && txn.data[2] == 0x86
-        && txn.data[3] == 0x21;
+        && txn.data[0] == 0x06
+        && txn.data[1] == 0xb0
+        && txn.data[2] == 0x91
+        && txn.data[3] == 0xf9;
 
       if (_confirmed || _withdrawTokens) {
         txn.executed = txn.destination.call.value(txn.value)(txn.data);
